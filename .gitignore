@@ -1,12 +1,10 @@
-# Binaries for programs and plugins
-*.exe
-*.exe~
-*.dll
-*.so
-*.dylib
+# ignore binaries
+remuxing
+remuxer
 
-# Test binary, build with `go test -c`
-*.test
+# logs and other stuff used while programing
+*.json
+*.log
 
-# Output of the go coverage tool, specifically when used with LiteIDE
-*.out
+# also ignore files in folders
+*/*

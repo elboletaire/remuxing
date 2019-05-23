@@ -233,8 +233,6 @@ func DecideBestAudios(audios []Track, languages []string) []Track {
 		return audios
 	}
 
-	fmt.Printf("%+v\n", languages)
-
 	for _, language := range languages {
 		resulting := DecideBestAudio(audios, language)
 		tracks = append(tracks, resulting)

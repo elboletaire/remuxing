@@ -11,6 +11,8 @@ import (
 	"github.com/logrusorgru/aurora"
 )
 
+const gray = 13
+
 func merge() {
 	exec.Command(
 		"mkvmerge",
@@ -25,12 +27,54 @@ func syntaxError(err string) {
 	os.Exit(1)
 }
 
-func parseArgs() (output string, inputs []string, languages []string) {
-	flag.StringVar(&output, "output", "", "The output folder")
-	var lang string
-	flag.StringVar(&lang, "languages", "", "The desired output languages")
+func usage() {
+	cmd := os.Args[0]
 
+	s := aurora.Yellow("Usage:\n\n").String()
+	s += fmt.Sprintf(
+		aurora.Gray(
+			gray,
+			"   %s -output [file] -languages [langs] [inputs...]\n\n",
+		).String(),
+		cmd,
+	)
+	s += aurora.Yellow("Usage example:\n\n").String()
+	s += fmt.Sprintf(
+		aurora.Gray(
+			gray,
+			"   %s -v -output output.mkv -languages eng,spa input1.mkv input2.mkv input3.mkv",
+		).String(),
+		cmd,
+	)
+	s += strings.Repeat("\n", 3)
+
+	fmt.Print(s)
+}
+
+func parseArgs() (
+	output string,
+	inputs []string,
+	languages []string,
+	verbose bool,
+	help bool,
+) {
+	flag.StringVar(&output, "output", "", "The output file.")
+	var lang string
+	flag.StringVar(&lang, "languages", "", "Languages to be taken from inputs. Order matters, first one will be marked as default track.")
+
+	flag.BoolVar(&help, "h", false, "This help.")
+	flag.BoolVar(&verbose, "v", false, "Verbose.")
 	flag.Parse()
+
+	if help || len(os.Args) == 1 {
+		flag.Usage = func() {
+			usage()
+			flag.PrintDefaults()
+		}
+
+		flag.Usage()
+		os.Exit(0)
+	}
 
 	if len(output) == 0 {
 		syntaxError("-output path missing")
@@ -61,7 +105,11 @@ func argIDLabel(id uint, lab string) string {
 	return strings.Join(result, "")
 }
 
-func printBestTrack(track info.Track) {
+func printBestTrack(verbose bool, track info.Track) {
+	if !verbose {
+		return
+	}
+
 	fmt.Printf(
 		aurora.Green("- Track ID %d (%s) from file %s\n").String(),
 		track.ID,
@@ -70,7 +118,11 @@ func printBestTrack(track info.Track) {
 	)
 }
 
-func title(text string) {
+func title(verbose bool, text string) {
+	if !verbose {
+		return
+	}
+
 	fmt.Printf(
 		aurora.Yellow("\n\n  %s\n  %s %s %s\n  %s\n\n").String(),
 		strings.Repeat("#", len(text)+4),
@@ -82,26 +134,30 @@ func title(text string) {
 }
 
 func main() {
-	output, inputs, languages := parseArgs()
+	output, inputs, languages, verbose, _ := parseArgs()
 
 	var infos []info.Info
 	var videos []info.Track
 	var audios []info.Track
 	var subtitles []info.Track
 
-	title("INPUTS")
+	title(verbose, "INPUTS")
 	for pos, input := range inputs {
-		fmt.Printf(
-			aurora.Green("%d. Getting file info for file: %s\n").String(),
-			pos+1,
-			input,
-		)
+		if verbose {
+			fmt.Printf(
+				aurora.Green("%d. Getting file info for file: %s\n").String(),
+				pos+1,
+				input,
+			)
+		}
 		information := info.GetFileInfo(input)
 		information.SetParents()
 		information.SetPosition(pos)
 
 		if !information.Container.Supported {
-			fmt.Println(aurora.Sprintf(aurora.Red("File container is not supported for file %s"), input))
+			if verbose {
+				fmt.Println(aurora.Red("File container is not supported for file %s").String(), input)
+			}
 			continue
 		}
 
@@ -119,15 +175,15 @@ func main() {
 		infos = append(infos, information)
 	}
 
-	title("VIDEO")
+	title(verbose, "VIDEO")
 	bestVideo := info.DecideBestVideo(videos)
 
-	printBestTrack(bestVideo)
+	printBestTrack(verbose, bestVideo)
 
-	title("AUDIO")
+	title(verbose, "AUDIO")
 	bestAudios := info.DecideBestAudios(audios, languages)
 	for _, audio := range bestAudios {
-		printBestTrack(audio)
+		printBestTrack(verbose, audio)
 	}
 
 	args := []string{
@@ -168,10 +224,12 @@ func main() {
 		args = append(args, audio.Parent.FileName)
 	}
 
-	title("COMMAND")
-	fmt.Printf(aurora.Gray(15, "$ mkvmerge %s\n").String(), strings.Join(args, " "))
+	title(verbose, "COMMAND")
+	if verbose {
+		fmt.Printf(aurora.Gray(15, "$ mkvmerge %s\n").String(), strings.Join(args, " "))
+	}
 
-	title("RESULT")
+	title(verbose, "RESULT")
 
 	result, err := exec.Command("mkvmerge", args...).CombinedOutput()
 
@@ -180,7 +238,9 @@ func main() {
 		return
 	}
 
-	fmt.Println(string(result))
+	if verbose {
+		fmt.Println(string(result))
+	}
 
 	// fmt.Println(fmt.Sprintf("Output is %s", output))
 	// fmt.Println(fmt.Sprintf("Inputs are %s", strings.Join(inputs[:], ",")))

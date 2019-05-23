@@ -137,10 +137,8 @@ func parseArgs() (
 		syntaxError("at least two inputs are expected")
 	}
 
-	languages = strings.Split(lang, ",")
-
-	if len(lang) == 0 || len(languages) < 1 {
-		syntaxError("at least one language was expected")
+	if len(lang) > 0 {
+		languages = strings.Split(lang, ",")
 	}
 
 	return
@@ -162,8 +160,9 @@ func printBestTrack(verbose bool, track info.Track) {
 	}
 
 	fmt.Printf(
-		aurora.Green("- Track ID %d (%s) from file %s\n").String(),
+		aurora.Green("- Track ID %d (%s in %s) from file %s\n").String(),
 		track.ID,
+		track.Codec,
 		track.Properties.Language,
 		track.Parent.FileName,
 	)

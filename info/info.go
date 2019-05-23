@@ -178,20 +178,20 @@ func DecideBestVideo(videos []Track) Track {
 DecideBestAudio bamong all tracks for the specified language.
 */
 func DecideBestAudio(audios []Track, language string) Track {
-	languages := filterTracks(audios, func(track Track) bool {
+	audios = filterTracks(audios, func(track Track) bool {
 		return track.Properties.Language == language
 	})
 
-	if len(languages) == 0 {
+	if len(audios) == 0 {
 		fmt.Print(aurora.Sprintf(aurora.Red("No audio tracks were found for language %s\n"), language))
 		os.Exit(1)
 	}
 
-	if len(languages) == 1 {
-		return languages[0]
+	if len(audios) == 1 {
+		return audios[0]
 	}
 
-	filtered := filterTracks(languages, func(track Track) bool {
+	filtered := filterTracks(audios, func(track Track) bool {
 		return track.Properties.CodecID == "A_AAC"
 	})
 
@@ -199,7 +199,7 @@ func DecideBestAudio(audios []Track, language string) Track {
 		return filtered[0]
 	}
 
-	filtered = filterTracks(languages, func(track Track) bool {
+	filtered = filterTracks(audios, func(track Track) bool {
 		return track.Properties.CodecID == "A_VORBIS"
 	})
 
@@ -207,7 +207,7 @@ func DecideBestAudio(audios []Track, language string) Track {
 		return filtered[0]
 	}
 
-	filtered = filterTracks(languages, func(track Track) bool {
+	filtered = filterTracks(audios, func(track Track) bool {
 		return track.Properties.CodecID == "A_AC3"
 	})
 
@@ -216,11 +216,11 @@ func DecideBestAudio(audios []Track, language string) Track {
 	}
 
 	// At the end, if there's no other audio we like, return the one with more priority.
-	sort.Slice(languages, func(i, j int) bool {
-		return languages[i].Parent.Position > languages[j].Parent.Position
+	sort.Slice(audios, func(i, j int) bool {
+		return audios[i].Parent.Position > audios[j].Parent.Position
 	})
 
-	return languages[0]
+	return audios[0]
 }
 
 /*
@@ -228,6 +228,13 @@ DecideBestAudios among all the tracks using the specified languages.
 */
 func DecideBestAudios(audios []Track, languages []string) []Track {
 	var tracks []Track
+
+	if len(languages) == 0 {
+		return audios
+	}
+
+	fmt.Printf("%+v\n", languages)
+
 	for _, language := range languages {
 		resulting := DecideBestAudio(audios, language)
 		tracks = append(tracks, resulting)

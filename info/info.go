@@ -175,7 +175,7 @@ func DecideBestVideo(videos []Track) Track {
 }
 
 /*
-DecideBestAudio bamong all tracks for the specified language.
+DecideBestAudio among all tracks for the specified language.
 */
 func DecideBestAudio(audios []Track, language string) Track {
 	audios = filterTracks(audios, func(track Track) bool {

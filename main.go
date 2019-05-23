@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"remuxing/info"
 	"strings"
 )
 
@@ -23,34 +24,7 @@ func syntaxError(err string) {
 	os.Exit(1)
 }
 
-type properties struct {
-	CodecID    string `json:"codec_id"`
-	Dimensions string `json:"display_dimensions"`
-	Language   string `json:"language"`
-}
-
-type track struct {
-	ID         int        `json:"id"`
-	Type       string     `json:"type"`
-	Codec      string     `json:"codec"`
-	Properties properties `json:"properties"`
-}
-
-type props struct {
-	Duration uint64
-}
-
-type container struct {
-	Properties props
-	Supported  bool
-}
-
-type info struct {
-	Container container
-	Tracks    []track `json:"tracks"`
-}
-
-func getFileInfo(file string) (info info) {
+func getFileInfo(file string) (info info.Info) {
 	fmt.Println("Getting file info for file:", file)
 
 	output, mergeErr := exec.Command(
@@ -102,30 +76,30 @@ func parseArgs() (output string, inputs []string, languages []string) {
 	return
 }
 
-func filterInfos(infos []info, test func(info) bool) (ret []info) {
-	for _, info := range infos {
-		if test(info) {
-			ret = append(ret, info)
+func filterInfos(infos []info.Info, test func(info.Info) bool) (ret []info.Info) {
+	for _, information := range infos {
+		if test(information) {
+			ret = append(ret, information)
 		}
 	}
 
 	return
 }
 
-func filterSupported(info info) bool {
+func filterSupported(info info.Info) bool {
 	return info.Container.Supported
 }
 
 func main() {
 	_, inputs, _ := parseArgs()
 
-	var infos []info
+	var infos []info.Info
 	for _, input := range inputs {
 		infos = append(infos, getFileInfo(input))
 	}
 	supported := filterInfos(infos, filterSupported)
 
-	fmt.Println(fmt.Sprintf("%+v", supported))
+	fmt.Printf("%+v\n", supported)
 
 	// fmt.Println(fmt.Sprintf("Output is %s", output))
 	// fmt.Println(fmt.Sprintf("Inputs are %s", strings.Join(inputs[:], ",")))

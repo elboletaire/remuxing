@@ -7,4 +7,6 @@ remuxer
 *.log
 
 # also ignore files in folders
-*/*
+videos
+audios
+output

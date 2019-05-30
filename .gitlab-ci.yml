@@ -11,16 +11,48 @@ test:
   script:
   - go test -v -cover ./...
 
-build:linux-x64:
+.build: &build
   image: golang
   stage: build
   before_script:
   - go test -i
   script:
   - go build
-  after_script:
-  - mkdir binaries
-  - mv remuxing binaries
   artifacts:
     paths:
-    - binaries
+    - remuxing
+
+.win-build: &win-build
+  <<: *build
+  variables:
+    GOOS: windows
+  script:
+  - go build -o remuxing.exe
+  artifacts:
+    paths:
+    - remuxing.exe
+
+.mac-build: &mac-build
+  <<: *build
+  variables:
+    GOOS: darwin
+
+build:linux-x64:
+  <<: *build
+
+build:mac-x64:
+  <<: *mac-build
+
+build:linux-x86:
+  <<: *build
+  variables:
+    GOARCH: '386'
+
+build:windows-x64:
+  <<: *win-build
+
+build:windows-x86:
+  <<: *win-build
+  variables:
+    GOARCH: '386'
+    GOOS: windows

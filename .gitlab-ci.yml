@@ -6,7 +6,7 @@ test:
   image: golang
   stage: test
   before_script:
-  - go get -i
+  - go test -i
   script:
   - go test -v -cover ./...
 

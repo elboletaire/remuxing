@@ -4,9 +4,9 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"remuxing/models"
 	"strings"
 
+	"github.com/elboletaire/remuxing/models"
 	"github.com/logrusorgru/aurora"
 )
 

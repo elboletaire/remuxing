@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"os"
-	"remuxing/models"
 	"strings"
 
+	"github.com/elboletaire/remuxing/models"
 	"github.com/logrusorgru/aurora"
 )
 

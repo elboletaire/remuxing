@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"os/exec"
-	"remuxing/models"
+	"github.com/elboletaire/remuxing/models"
 )
 
 /*

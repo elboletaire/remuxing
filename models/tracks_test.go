@@ -3,7 +3,7 @@ package models
 import (
 	"testing"
 
-	"remuxing/tests"
+	"github.com/elboletaire/remuxing/tests"
 )
 
 func TestGetBestVideoReturnsUniqueHEVCSource(t *testing.T) {

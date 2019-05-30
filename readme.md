@@ -42,6 +42,7 @@ Note that you can define as many inputs as you want. The input order is importan
 - `-v`: Enables verbosity. Optional.
 - `-output`: Sets output file. Mandatory.
 - `-languages`: Defines the desired output languages. Order is important, first language will be set as default one. Not setting this option will merge all inputs. Optional.
+- `[inputs]`: Minimum 2 expected. Any kind of source file, like videos, audios or subtitle files. Mandatory.
 
 Installing
 ----------

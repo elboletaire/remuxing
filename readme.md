@@ -46,21 +46,34 @@ Note that you can define as many inputs as you want. The input order is importan
 Installing
 ----------
 
-Right now there's only one way to do this, and you need [golang][golang] installed in your system.
-
-When you already have golang, simply do:
+If you have golang in your system, simply do:
 
 ~~~bash
 go get github.com/elboletaire/remuxing
 go run github.com/elboletaire/remuxing [options] [inputs]
 ~~~
 
+Otherwise, you can download any of the available built binaries from [the gitlab copy][binaries]:
+
+- Linux [x32][linux x32]/[x64][linux x64]
+- Windows [x32][win x32]/[x64][win x64]
+- [Mac (x64 only)][mac]
+
 2does
 -----
 
 - [x] Disable verbosity unless -v is defined
 - [x] Allow to use without languages setting, appending them all
-- [ ] Add builds for download (using gitlab-ci or drone or...)
+- [x] Add builds for download (using gitlab-ci or drone or...)
 - [ ] Check files length to ensure all are of the same size, unless param `-S` is specified.
 - [ ] Allow to skip duplicated languages, in case there's no -languages specified (the previous setting would add the same audio language for the same file, as different input would probably have the same language multiple times).
 - [ ] Be able to specify the proper language id for a track (for cases where language is not properly set in the source)
+
+[golang]: https://golang.org/
+[binaries]: https://gitlab.com/elboletaire/remuxing
+
+[linux x64]: https://gitlab.com/elboletaire/remuxing/-/jobs/artifacts/master/download?job=build%3Alinux-x64
+[linux x32]: https://gitlab.com/elboletaire/remuxing/-/jobs/artifacts/master/download?job=build%3Alinux-x32
+[win x32]: https://gitlab.com/elboletaire/remuxing/-/jobs/artifacts/master/download?job=build%3Awindows-x32
+[win x64]: https://gitlab.com/elboletaire/remuxing/-/jobs/artifacts/master/download?job=build%3Awindows-x64
+[mac]: https://gitlab.com/elboletaire/remuxing/-/jobs/artifacts/master/download?job=build%3Amac-x64

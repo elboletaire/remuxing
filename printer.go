@@ -38,27 +38,30 @@ func syntaxError(err string) {
 	os.Exit(1)
 }
 
-func printBestTrack(verbose bool, track models.TrackController) {
-	if !verbose {
-		return
-	}
-
+func title(text string) {
 	fmt.Printf(
-		aurora.Green("- Track ID %d (%s in %s) from file %s\n").String(),
-		track.Track.ID,
-		track.Track.Codec,
-		track.Track.Properties.Language,
-		track.Input.FileName,
-	)
-}
-
-func title(text string) string {
-	return fmt.Sprintf(
 		aurora.Yellow("\n\n  %s\n  %s %s %s\n  %s\n\n").String(),
 		strings.Repeat("#", len(text)+4),
 		"#",
 		text,
 		"#",
 		strings.Repeat("#", len(text)+4),
+	)
+}
+
+func printTracks(text string, tracks models.Tracks) {
+	title(text)
+	for _, track := range tracks {
+		printTrack(&track)
+	}
+}
+
+func printTrack(track *models.TrackController) {
+	fmt.Printf(
+		aurora.Green("- Track ID %d (%s in %s) from file %s\n").String(),
+		track.Track.ID,
+		track.Track.Codec,
+		track.Track.Properties.Language,
+		track.Input.FileName,
 	)
 }

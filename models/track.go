@@ -2,6 +2,7 @@ package models
 
 import (
 	"encoding/json"
+	"fmt"
 	"strings"
 )
 
@@ -58,4 +59,25 @@ GetHeight from dimensions
 */
 func (track *Track) GetHeight() string {
 	return strings.Split(*track.Properties.Dimensions, "x")[1]
+}
+
+/*
+GetID returns the track id as string
+*/
+func (track *Track) GetID() string {
+	return fmt.Sprint(track.ID)
+}
+
+/*
+GetArgIDLabel returns an id argument with the specified label (mkvmerge syntax)
+*/
+func (track *Track) GetArgIDLabel(label string) string {
+	return track.GetArgID() + label
+}
+
+/*
+GetArgID returns the id argument (mkvmerge syntax)
+*/
+func (track *Track) GetArgID() string {
+	return fmt.Sprint(track.ID) + ":"
 }

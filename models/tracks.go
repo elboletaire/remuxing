@@ -178,6 +178,10 @@ func (t *TracksController) GetBestAudio(language string) TrackController {
 GetBestSubtitles among all the tracks, based on given languages and custom definitions.
 */
 func (t *TracksController) GetBestSubtitles(languages []string) (subtitles Tracks) {
+	if len(languages) == 0 {
+		return t.Subtitles
+	}
+
 	for _, language := range languages {
 		best := t.GetBestSubtitlesForLanguage(language)
 		for _, subtitle := range best {

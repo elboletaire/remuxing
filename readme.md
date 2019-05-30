@@ -1,6 +1,11 @@
 Remuxing utility helper for mkvmerge
 ====================================
 
+[![pipeline status][pipeline svg]][pipelines]
+[![coverage report][coverage svg]][jobs]
+
+
+
 Binary to easily generate a Matroska file from multiple inputs.
 
 This ain't a golang library for matroska files, nor an alternative to mkvmerge, but an utility to easily create mkvmerge commands from various input files.
@@ -63,13 +68,19 @@ Otherwise, you can download any of the available built binaries from [the gitlab
 2does
 -----
 
-- [x] Disable verbosity unless -v is defined
-- [x] Allow to use without languages setting, appending them all
-- [x] Add builds for download (using gitlab-ci or drone or...)
+- [x] Disable verbosity unless -v is defined.
+- [x] Allow to use without languages setting, appending them all.
+- [x] Add builds for download (using gitlab-ci or drone or...).
 - [ ] Check files length to ensure all are of the same size, unless param `-S` is specified.
-- [ ] Allow to skip duplicated languages, in case there's no -languages specified (the previous setting would add the same audio language for the same file, as different input would probably have the same language multiple times).
-- [ ] Be able to specify the proper language id for a track (for cases where language is not properly set in the source)
+- [ ] Allow to skip duplicated languages, in case there's no -languages specified.
+- [ ] Be able to specify the proper language id for a track (for cases where language is not properly set in the source).
+- [ ] Do not color output for windows builds.
 
+
+[pipeline svg]: https://gitlab.com/elboletaire/remuxing/badges/master/pipeline.svg
+[pipelines]: https://gitlab.com/elboletaire/remuxing/pipelines
+[coverage svg]: https://gitlab.com/elboletaire/remuxing/badges/master/coverage.svg
+[jobs]: https://gitlab.com/elboletaire/remuxing/-/jobs
 [golang]: https://golang.org/
 [binaries]: https://gitlab.com/elboletaire/remuxing
 

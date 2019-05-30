@@ -23,7 +23,7 @@ Info is the main video information object/struct
 */
 type Info struct {
 	Container container
-	Tracks    Tracks
+	Tracks    Tracks `json:"tracks"`
 	FileName  string `json:"file_name"`
 	Position  int
 	FileSize  int64

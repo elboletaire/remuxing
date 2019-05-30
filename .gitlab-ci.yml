@@ -1,0 +1,25 @@
+stages:
+- test
+- build
+
+test:
+  image: golang
+  stage: test
+  before_script:
+  - go get -i
+  script:
+  - go test -v -cover ./...
+
+build:linux-x86:
+  image: golang
+  stage: build
+  before_script:
+  - go get -i
+  script:
+  - go build
+  after_script:
+  - mkdir binaries
+  - mv remuxing binaries
+  artifacts:
+    paths:
+    - binaries

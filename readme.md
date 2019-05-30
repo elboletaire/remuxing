@@ -41,7 +41,19 @@ Note that you can define as many inputs as you want. The input order is importan
 
 - `-v`: Enables verbosity. Optional.
 - `-output`: Sets output file. Mandatory.
-- `languages`: Defines the desired output languages. Order is important, first language will be set as default one. Not setting this option will merge all i nputs. Optional.
+- `-languages`: Defines the desired output languages. Order is important, first language will be set as default one. Not setting this option will merge all inputs. Optional.
+
+Installing
+----------
+
+Right now there's only one way to do this, and you need [golang][golang] installed in your system.
+
+When you already have golang, simply do:
+
+~~~bash
+go get github.com/elboletaire/remuxing
+go run github.com/elboletaire/remuxing [options] [inputs]
+~~~
 
 2does
 -----

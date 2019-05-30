@@ -75,7 +75,7 @@ func videoSorting(videos Tracks) Tracks {
 			return videos[i].Input.Position > videos[j].Input.Position
 		}
 		// Take the biggest pixel density image
-		return videos[i].Track.GetHeight() > videos[j].Track.GetHeight()
+		return videos[i].Track.GetHeight() < videos[j].Track.GetHeight()
 	})
 
 	return videos

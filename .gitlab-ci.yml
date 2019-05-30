@@ -11,11 +11,11 @@ test:
   script:
   - go test -v -cover ./...
 
-build:linux-x86:
+build:linux-x64:
   image: golang
   stage: build
   before_script:
-  - go get -i
+  - go test -i
   script:
   - go build
   after_script:

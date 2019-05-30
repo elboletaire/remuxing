@@ -5,6 +5,7 @@ stages:
 test:
   image: golang
   stage: test
+  coverage: /coverage:\s*([0-9\.]+)%/
   before_script:
   - go test -i
   script:

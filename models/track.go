@@ -36,11 +36,7 @@ type TrackController struct {
 UnmarshalJSON ensures info is properly extracted to TrackController
 */
 func (track *TrackController) UnmarshalJSON(data []byte) error {
-	if err := json.Unmarshal(data, &track.Track); err != nil {
-		return err
-	}
-
-	return nil
+	return json.Unmarshal(data, &track.Track)
 }
 
 /*

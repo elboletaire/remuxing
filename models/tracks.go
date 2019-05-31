@@ -188,18 +188,46 @@ func extractWithCodec(tracks Tracks, codec string) Tracks {
 GetBestSubtitles among all the tracks, based on given languages and custom definitions.
 */
 func (t *TracksController) GetBestSubtitles(languages []string) (subtitles Tracks) {
-	if len(languages) == 0 {
+	if languages == nil {
 		return t.Subtitles
 	}
 
 	for _, language := range languages {
 		best := t.GetBestSubtitlesForLanguage(language)
-		for _, subtitle := range best {
-			subtitles = append(subtitles, subtitle)
+		if len(best) > 1 {
+			best = reduceSubtitles(best)
 		}
+		subtitles = append(subtitles, best...)
 	}
 
 	return
+}
+
+func reduceSubtitles(subtitles Tracks) Tracks {
+	type Count struct {
+		Forced int
+		Normal int
+	}
+	count := Count{}
+	var resulting Tracks
+
+	for _, subtitle := range subtitles {
+		if (subtitle.Track.Properties.Forced && count.Forced < 1) ||
+			(!subtitle.Track.Properties.Forced && count.Normal < 1) {
+
+			resulting = append(resulting, subtitle)
+
+			if subtitle.Track.Properties.Forced {
+				count.Forced++
+
+				continue
+			}
+
+			count.Normal++
+		}
+	}
+
+	return resulting
 }
 
 /*
@@ -207,33 +235,7 @@ GetBestSubtitlesForLanguage returns all the subtitle tracks for the given langua
 Note that subtitles are always return as list, as it may contain forced or
 */
 func (t *TracksController) GetBestSubtitlesForLanguage(language string) (subtitles Tracks) {
-	subtitles = t.Subtitles.Filter(func(track TrackController) bool {
+	return t.Subtitles.Filter(func(track TrackController) bool {
 		return track.Track.Properties.Language == language
 	})
-
-	if len(subtitles) == 1 {
-		return subtitles
-	}
-
-	// Search for forced tracks
-	forced := t.Subtitles.Filter(func(track TrackController) bool {
-		return track.Track.Properties.Forced
-	})
-
-	if len(forced) == 0 {
-		// Consider default one is not properly tagged as forced
-		def := t.Subtitles.Filter(func(track TrackController) bool {
-			return track.Track.Properties.Default
-		})
-
-		if len(def) > 0 {
-			def[0].Track.Properties.Forced = true
-		}
-	}
-
-	if len(subtitles) > 2 {
-		return subtitles[:1]
-	}
-
-	return
 }

@@ -269,3 +269,111 @@ func TestGetBestAudioDecidesBetweenCodecsBasedOnPositionIfNoKnownCodecsFound(t *
 
 	tests.Equals(t, "0", tracks.GetBestAudios([]string{"eng"})[0].Track.GetID())
 }
+
+func TestGetBestSubtitlesReturnsTheUniqueAvailableOption(t *testing.T) {
+	tracks := TracksController{
+		Subtitles: Tracks{
+			TrackController{
+				Track: &Track{
+					ID: 0,
+					Properties: properties{
+						Language: "eng",
+					},
+				},
+			},
+			TrackController{
+				Track: &Track{
+					ID: 1,
+					Properties: properties{
+						Language: "spa",
+					},
+				},
+			},
+			TrackController{
+				Track: &Track{
+					ID: 2,
+					Properties: properties{
+						Language: "eng",
+						Forced:   true,
+					},
+				},
+			},
+		},
+	}
+
+	subs := tracks.GetBestSubtitles([]string{"spa"})
+
+	tests.Equals(t, 1, len(subs))
+	tests.Equals(t, "1", subs[0].Track.GetID())
+}
+
+func TestGetBestSubtitlesReturnsOnlyOnePerLanguage(t *testing.T) {
+	tracks := TracksController{
+		Subtitles: Tracks{
+			TrackController{
+				Track: &Track{
+					ID: 0,
+					Properties: properties{
+						Language: "eng",
+					},
+				},
+			},
+			TrackController{
+				Track: &Track{
+					ID: 1,
+					Properties: properties{
+						Language: "spa",
+					},
+				},
+			},
+			TrackController{
+				Track: &Track{
+					ID: 2,
+					Properties: properties{
+						Language: "eng",
+					},
+				},
+			},
+		},
+	}
+
+	subs := tracks.GetBestSubtitles([]string{"spa", "eng"})
+
+	tests.Equals(t, 2, len(subs))
+}
+
+func TestGetBestSubtitlesReturnsMoreThanOneIfOneIsForced(t *testing.T) {
+	tracks := TracksController{
+		Subtitles: Tracks{
+			TrackController{
+				Track: &Track{
+					ID: 0,
+					Properties: properties{
+						Language: "eng",
+						Forced:   true,
+					},
+				},
+			},
+			TrackController{
+				Track: &Track{
+					ID: 1,
+					Properties: properties{
+						Language: "spa",
+					},
+				},
+			},
+			TrackController{
+				Track: &Track{
+					ID: 2,
+					Properties: properties{
+						Language: "eng",
+					},
+				},
+			},
+		},
+	}
+
+	subs := tracks.GetBestSubtitles([]string{"spa", "eng"})
+
+	tests.Equals(t, 3, len(subs))
+}

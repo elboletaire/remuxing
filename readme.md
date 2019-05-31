@@ -3,6 +3,7 @@ Remuxing utility helper for mkvmerge
 
 [![pipeline status][pipeline svg]][pipelines]
 [![coverage report][coverage svg]][jobs]
+[![gocard svg][]][goreportcard]
 
 
 
@@ -83,6 +84,8 @@ Otherwise, you can download any of the available built binaries from [the gitlab
 [pipeline svg]: https://gitlab.com/elboletaire/remuxing/badges/master/pipeline.svg
 [pipelines]: https://gitlab.com/elboletaire/remuxing/pipelines
 [coverage svg]: https://gitlab.com/elboletaire/remuxing/badges/master/coverage.svg
+[gocard svg]: https://goreportcard.com/badge/github.com/elboletaire/remuxing
+[goreportcard]: https://goreportcard.com/report/github.com/elboletaire/remuxing
 [jobs]: https://gitlab.com/elboletaire/remuxing/-/jobs
 
 [mkvtoolnix]: https://mkvtoolnix.download/

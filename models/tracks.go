@@ -138,31 +138,20 @@ func (t *TracksController) GetBestAudio(language string) TrackController {
 		return audios[0]
 	}
 
+	// If there are more than one languages, filter the already filtered results
 	if len(audios) == 0 {
+		// Otherwise, filter again all inputs.
 		audios = t.Audios
 	}
 
-	filtered := t.Audios.Filter(func(track TrackController) bool {
-		return track.Track.Properties.CodecID == "A_AAC"
+	filtered := extractWithCodecs(audios, []string{
+		"A_AAC",
+		"A_VORBIS",
+		"A_OPUS",
+		"A_AC3",
 	})
 
-	if len(filtered) == 1 {
-		return filtered[0]
-	}
-
-	filtered = t.Audios.Filter(func(track TrackController) bool {
-		return track.Track.Properties.CodecID == "A_VORBIS"
-	})
-
-	if len(filtered) == 1 {
-		return filtered[0]
-	}
-
-	filtered = t.Audios.Filter(func(track TrackController) bool {
-		return track.Track.Properties.CodecID == "A_AC3"
-	})
-
-	if len(filtered) == 1 {
+	if len(filtered) > 0 {
 		return filtered[0]
 	}
 
@@ -172,6 +161,27 @@ func (t *TracksController) GetBestAudio(language string) TrackController {
 	})
 
 	return audios[0]
+}
+
+func extractWithCodecs(tracks Tracks, codecs []string) Tracks {
+	if track := extractWithCodec(tracks, codecs[0:1][0]); track != nil {
+		return track
+	}
+
+	// No results could be found + there are no more codecs to search by
+	if len(codecs) <= 1 {
+		return nil
+	}
+
+	codecs = codecs[1:]
+
+	return extractWithCodecs(tracks, codecs)
+}
+
+func extractWithCodec(tracks Tracks, codec string) Tracks {
+	return tracks.Filter(func(track TrackController) bool {
+		return track.Track.Properties.CodecID == codec
+	})
 }
 
 /*

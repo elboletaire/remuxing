@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/elboletaire/remuxing/models"
-	"github.com/logrusorgru/aurora"
 )
 
 const gray = 13
@@ -71,8 +70,7 @@ func main() {
 		printTrack(video)
 		printTracks("AUDIOS", audios)
 		printTracks("SUBTITLES", subtitles)
-		title("COMMAND")
-		fmt.Printf(aurora.Gray(15, "$ mkvmerge %s\n").String(), strings.Join(command, " "))
+		printCommand(command)
 	}
 
 	result, err := Command(command)

@@ -52,6 +52,8 @@ Note that you can define as many inputs as you want. The input order is importan
 Installing
 ----------
 
+You need [mkvtoolnix][] package installed in your system. If you're under windows, ensure you add the [mkvtoolnix][] binary folder to your `PATH` environment var.
+
 If you have golang in your system, simply do:
 
 ~~~bash
@@ -74,6 +76,7 @@ Otherwise, you can download any of the available built binaries from [the gitlab
 - [ ] Check files length to ensure all are of the same size, unless param `-S` is specified.
 - [ ] Allow to skip duplicated languages, in case there's no -languages specified.
 - [ ] Be able to specify the proper language id for a track (for cases where language is not properly set in the source).
+- [ ] Check input files exist (right now throws an ugly golang panic cerror)
 - [ ] Do not color output for windows builds.
 
 
@@ -81,9 +84,10 @@ Otherwise, you can download any of the available built binaries from [the gitlab
 [pipelines]: https://gitlab.com/elboletaire/remuxing/pipelines
 [coverage svg]: https://gitlab.com/elboletaire/remuxing/badges/master/coverage.svg
 [jobs]: https://gitlab.com/elboletaire/remuxing/-/jobs
+
+[mkvtoolnix]: https://mkvtoolnix.download/
 [golang]: https://golang.org/
 [binaries]: https://gitlab.com/elboletaire/remuxing
-
 [linux x64]: https://gitlab.com/elboletaire/remuxing/-/jobs/artifacts/master/download?job=build%3Alinux-x64
 [linux x32]: https://gitlab.com/elboletaire/remuxing/-/jobs/artifacts/master/download?job=build%3Alinux-x32
 [win x32]: https://gitlab.com/elboletaire/remuxing/-/jobs/artifacts/master/download?job=build%3Awindows-x32

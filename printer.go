@@ -7,6 +7,7 @@ import (
 
 	"github.com/elboletaire/remuxing/models"
 	"github.com/logrusorgru/aurora"
+	"github.com/mattn/go-colorable"
 )
 
 func usage() {
@@ -30,7 +31,15 @@ func usage() {
 	)
 	s += strings.Repeat("\n", 3)
 
-	fmt.Print(s)
+	fmt.Fprint(colorable.NewColorableStdout(), s)
+}
+
+func printCommand(command []string) {
+	title("COMMAND")
+	fmt.Fprintf(
+		colorable.NewColorableStdout(),
+		aurora.Gray(15, "$ mkvmerge %s\n").String(), strings.Join(command, " "),
+	)
 }
 
 func syntaxError(err string) {
@@ -39,7 +48,8 @@ func syntaxError(err string) {
 }
 
 func title(text string) {
-	fmt.Printf(
+	fmt.Fprintf(
+		colorable.NewColorableStdout(),
 		aurora.Yellow("\n\n  %s\n  %s %s %s\n  %s\n\n").String(),
 		strings.Repeat("#", len(text)+4),
 		"#",
@@ -57,7 +67,8 @@ func printTracks(text string, tracks models.Tracks) {
 }
 
 func printTrack(track *models.TrackController) {
-	fmt.Printf(
+	fmt.Fprintf(
+		colorable.NewColorableStdout(),
 		aurora.Green("- Track ID %d (%s in %s) from file %s\n").String(),
 		track.Track.ID,
 		track.Track.Codec,
